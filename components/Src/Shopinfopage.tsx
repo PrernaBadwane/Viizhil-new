@@ -14,7 +14,7 @@ const Shopinfopage = () => {
         <NavigationHeader name="Onboarding" />
         <ScrollView>
         <View style={{ ...styles.container }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>router.push('/(tabs)/home')}>
             <View style={{ ...styles.skipbutton }}>
               <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: '700' }}>Skip</Text>
             </View>
@@ -117,7 +117,7 @@ export default Shopinfopage
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: "red",
+    backgroundColor: '#F9F9F9',
     height: "100%",
     padding: PADDING.largePad
   },

@@ -60,7 +60,7 @@ export default BankDetailspage
 
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: "red",
+        backgroundColor: '#F9F9F9',
         height: "89%",
         padding: PADDING.largePad
     },

@@ -3,15 +3,28 @@ import React, { useState } from 'react'
 import NavigationHeader from '@/app/commonComponts/NavigationHeader'
 import { PADDING } from '@/constants/Colors'
 import { Picker } from '@react-native-picker/picker'
+import { RadioButton } from 'react-native-paper'
+import PrimaryBtn from '@/appComponent/button/PrimaryButton'
 
 const Addstoreinfo = () => {
     const [shopName, setShopName] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [selected, setSelected] = useState("Own Brand");
+    const [loading, setLoading] = useState(false);
+
+
+    const handleSubmit = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+            alert('Verification Submitted!');
+        }, 2000);
+    };
     return (
         <View style={{ flex: 1 }}>
             <NavigationHeader name='Store Info' />
-            <View style={{ ...styles.container }}>
-                <ScrollView>
+            <ScrollView>
+                <View style={{ ...styles.container }}>
 
                     <TouchableOpacity>
                         <View style={styles.circle} />
@@ -41,9 +54,9 @@ const Addstoreinfo = () => {
                         <View style={styles.pickerContainer}>
                             <Picker
                                 selectedValue={selectedCategory}
-                                onValueChange={(itemValue:any) => setSelectedCategory(itemValue)}
+                                onValueChange={(itemValue: any) => setSelectedCategory(itemValue)}
                                 style={styles.pickerstyle}
-                                dropdownIconColor="#606060" 
+                                dropdownIconColor="#606060"
                             >
                                 <Picker.Item label="Select category" value="" enabled={false} color="#A0A0A0" />
                                 <Picker.Item label="Restaurant" value="restaurant" />
@@ -52,8 +65,70 @@ const Addstoreinfo = () => {
                             </Picker>
                         </View>
                     </View>
-                </ScrollView>
-            </View>
+                    <View style={styles.brandcontainer}>
+                        <Text style={styles.labebrand}>Brand type :</Text>
+                        <View style={styles.toggleContainer}>
+                            <TouchableOpacity
+                                style={[styles.option, selected === "Own Brand" && styles.selectedOption]}
+                                onPress={() => setSelected("Own Brand")}
+                            >
+                                <RadioButton
+                                    value="Own Brand"
+                                    status={selected === "Own Brand" ? "checked" : "unchecked"}
+                                    onPress={() => setSelected("Own Brand")}
+                                    color="green"
+                                />
+                                <Text style={[styles.optionText, selected === "Own Brand" && styles.selectedText]}>
+                                    Own Brand
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.option, selected === "Franchise Brand" && styles.selectedOption]}
+                                onPress={() => setSelected("Franchise Brand")}
+                            >
+                                <RadioButton
+                                    value="Franchise Brand"
+                                    status={selected === "Franchise Brand" ? "checked" : "unchecked"}
+                                    onPress={() => setSelected("Franchise Brand")}
+                                    color="green"
+                                />
+                                <Text style={[styles.optionText, selected === "Franchise Brand" && styles.selectedText]}>
+                                    Franchise Brand
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.textcontainer}>
+                        <Text style={styles.label}>Brand Name :</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter Brand Name"
+                            placeholderTextColor="#BEBEBE"
+                            value={shopName}
+                            onChangeText={setShopName}
+                        />
+                    </View>
+                    <View style={styles.picker}>
+                        <Text style={styles.label}>Tax :</Text>
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={selectedCategory}
+                                onValueChange={(itemValue: any) => setSelectedCategory(itemValue)}
+                                style={styles.pickerstyle}
+                                dropdownIconColor="#606060"
+                            >
+                                <Picker.Item label="Select Tax" value="" enabled={false} color="#A0A0A0" />
+                                <Picker.Item label="0%" value="restaurant" />
+                                <Picker.Item label="10%" value="cafe" />
+                                <Picker.Item label="20%" value="fast_food" />
+                            </Picker>
+                        </View>
+                    </View>
+                    <View>
+                        <PrimaryBtn action={handleSubmit} btnTxt="Submit" loading={loading} />
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -63,7 +138,7 @@ export default Addstoreinfo
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        // backgroundColor: 'red',
+        backgroundColor: '#F9F9F9',
         padding: PADDING.largePad
     },
     circle: {
@@ -95,15 +170,49 @@ const styles = StyleSheet.create({
     },
     picker: {
         marginBottom: 15,
-      },
-      pickerContainer: {
+    },
+    pickerContainer: {
+        height: 55,
         borderWidth: 1,
-        borderColor: '#A0A0A0', // Gray border
-        borderRadius: 8, // Rounded corners
-        backgroundColor: '#FFF', // White background
-      },
-      pickerstyle: {
-        height: 50,
-        color: '#000', // Text color
-      },
+        borderColor: '#A0A0A0',
+        borderRadius: 8,
+        backgroundColor: '#FFF',
+    },
+    pickerstyle: {
+        color: '#BEBEBE',
+        alignItems: 'center'
+    },
+    brandcontainer: {
+        marginBottom: 15,
+    },
+    labebrand: {
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    toggleContainer: {
+        flexDirection: "row",
+        gap: 10,
+    },
+    option: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#8E8E8E",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        minWidth: 150,
+        justifyContent: "flex-start",
+    },
+    selectedOption: {
+        borderColor: "#26B24B",
+    },
+    optionText: {
+        fontSize: 16,
+        color: "#BEBEBE",
+    },
+    selectedText: {
+        color: "black",
+        fontWeight: "bold",
+    },
 })

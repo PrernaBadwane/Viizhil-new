@@ -5,7 +5,7 @@ import { faBell, faChevronLeft, faChevronRight, faMapMarkerAlt, faPhone } from '
 import { PADDING } from '@/constants/Colors'
 import { router } from 'expo-router'
 
-const index = () => {
+const AllShop = () => {
     return (
         <View>
             <View style={styles.headercontainer}>
@@ -74,7 +74,7 @@ const index = () => {
     )
 }
 
-export default index
+export default AllShop
 
 const styles = StyleSheet.create({
     headercontainer: {

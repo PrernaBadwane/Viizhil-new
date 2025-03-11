@@ -71,7 +71,7 @@ export default Verificationpage
 
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: "red",
+        backgroundColor: '#F9F9F9',
         height: "93%",
         padding: PADDING.largePad
     },

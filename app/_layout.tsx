@@ -37,6 +37,14 @@ export default function RootLayout() {
         <Stack.Screen name="verification" options={{ headerShown: false }} />
         <Stack.Screen name="bankdetails" options={{ headerShown: false }} />
         <Stack.Screen name="storeinfo" options={{ headerShown: false }} />
+        <Stack.Screen name="upload" options={{ headerShown: false }} />
+        <Stack.Screen name="address" options={{ headerShown: false }} />
+        <Stack.Screen name="product" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)/home" options={{ headerShown: false }} />
+        <Stack.Screen name="orderdetails" options={{ headerShown: false }} />
+        <Stack.Screen name="editprofile" options={{ headerShown: false }} />
+        <Stack.Screen name="changepassword" options={{ headerShown: false }} />
+
 
         <Stack.Screen name="+not-found" />
       </Stack>
