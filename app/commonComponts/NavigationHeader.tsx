@@ -25,7 +25,7 @@ const NavigationHeader = (props: PropsType) => {
         <Text style={styles.title}>{name}</Text>
         <View style={styles.rightIcons}>
           <TouchableOpacity style={styles.iconButton}>
-            <FontAwesomeIcon icon={faHeadset} size={18} color='#5C5C5C' />
+            <Image source={require('../../assets/images/headset.png')} style={{ width: 20, height: 20}} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
            <Image source={require('../../assets/images/home.png')} style={{ width: 20, height: 20}} />

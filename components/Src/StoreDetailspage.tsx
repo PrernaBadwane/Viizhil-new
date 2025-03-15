@@ -13,7 +13,7 @@ const StoreDetailspage = () => {
       <View style={{ ...styles.container }}>
         <TouchableOpacity style={styles.card} onPress={()=>router.push('/storeinfo')}>
           <View>
-            <Image source={require('../../assets/images/storepage.png')} style={{ width: 30, height: 30 }} />
+            <Image source={require('../../assets/images/storedetails.png')} style={{ width: 30, height: 30 }} />
           </View>
           <Text style={styles.text}>Store Info</Text>
           <View style={styles.chevronContainer}>

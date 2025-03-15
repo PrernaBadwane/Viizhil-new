@@ -1,5 +1,7 @@
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
+import { Picker } from '@react-native-picker/picker';
+import { StyleSheet } from 'react-native';
 
 export default {
   light: {
@@ -19,6 +21,8 @@ export default {
 };
 export const COLORS = {
   GroceryPrimaryColor:'#376E46',
+  PickerLabelColor:'#BEBEBE',
+  PickerTextColor:'#000',
 }
 
 export const PADDING = {
@@ -51,3 +55,31 @@ export const MARGIN = {
   medMar:14,
   largeMar:16,
 }
+
+
+export const CommonStyles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    fontSize: 13,
+    bottom:5
+},
+Addbutton:{
+  height: 30,
+  backgroundColor: "#376F46",
+  justifyContent: "center",
+  width: 70,
+  alignItems: "center",
+  // margin: 10,
+  alignSelf: "flex-end",
+  borderRadius: 12,
+  borderWidth: 1,
+  borderColor: "#376F46"
+},
+placeholdercolor:{
+  fontSize:14,
+  fontWeight:'500',
+  color:'#2B2827'
+}
+})
+
+

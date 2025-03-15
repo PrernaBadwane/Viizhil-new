@@ -23,6 +23,14 @@ const BankDetailspage = () => {
                 <NavigationHeader name='Bank Details' />
 
                 <View style={{ ...styles.container }}>
+                <View style={{ ...styles.inputContainer }}>
+                        <Text style={styles.label}>Account Holder Name :</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Enter the Account Number"
+                            placeholderTextColor="#BEBEBE"
+                        />
+                    </View>
                     <View style={{ ...styles.inputContainer }}>
                         <Text style={styles.label}>Account Number :</Text>
                         <TextInput

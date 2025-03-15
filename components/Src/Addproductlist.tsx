@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import NavigationHeader from '@/app/commonComponts/NavigationHeader';
 import { MARGIN, PADDING } from '@/constants/Colors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RadioButton } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import PrimaryBtn from '@/appComponent/button/PrimaryButton';
@@ -48,12 +48,18 @@ const AddProductList = () => {
                             ]}
                             onPress={() => setSelectedCategory(category.id)}
                         >
-                            <RadioButton
-                                value={category.id}
-                                status={selectedCategory === category.id ? "checked" : "unchecked"}
-                                onPress={() => setSelectedCategory(category.id)}
-                            />
-                            <Text style={styles.label}>{category.label}</Text>
+                            {selectedCategory === category.id ?
+                                <FontAwesomeIcon icon={faCircleCheck} size={18} color='#26B24B' style={{ marginRight: 5 }} />
+                                :
+                                <RadioButton
+
+                                    value={category.id}
+                                    status={selectedCategory === category.id ? "checked" : "unchecked"}
+                                    onPress={() => setSelectedCategory(category.id)}
+                                />
+                            }
+
+                            <Text style={{ ...styles.label, fontWeight: selectedCategory === category.id ? "bold" : "400" }}>{category.label}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -147,36 +153,32 @@ const AddProductList = () => {
                             </View>
                         </View>
                     ))}
-                </ScrollView>
-                <View style={styles.floatingButtonContainer}>
-                    <TouchableOpacity style={styles.floatingButton} onPress={addField}>
-                        <FontAwesomeIcon icon={faPlus} size={24} color="green" />
-                    </TouchableOpacity>
-                </View>
-                {/* Add Button */}
-                <View style={{ ...styles.saveContainer }}>
+                    <View style={{ ...styles.saveContainer }}>
 
-                    <View style={styles.addContainer}>
-                        <TouchableOpacity style={styles.addButton} onPress={addField}>
-                            <FontAwesomeIcon icon={faPlus} size={16} color="#fff" style={styles.icon} />
-                            <Text style={styles.addButtonText}>Add Quantity</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {fields.length > 1 && (
                         <View style={styles.addContainer}>
-                            <TouchableOpacity
-                                style={styles.remove}
-                                onPress={() => removeField(fields[fields.length - 1].id)}
-                            >
-                                <Text style={styles.removed}>Remove</Text>
+                            <TouchableOpacity style={styles.addButton} onPress={addField}>
+                                <FontAwesomeIcon icon={faPlus} size={16} color="#fff" style={styles.icon} />
+                                <Text style={styles.addButtonText}>Add Quantity</Text>
                             </TouchableOpacity>
                         </View>
-                    )}
+                        {fields.length > 1 && (
+                            <View style={styles.addContainer}>
+                                <TouchableOpacity
+                                    style={styles.remove}
+                                    onPress={() => removeField(fields[fields.length - 1].id)}
+                                >
+                                    <Text style={styles.removed}>Remove</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </View>
 
-
-                </View>
-
-
+                </ScrollView>
+            </View>
+            <View style={styles.floatingButtonContainer}>
+                <TouchableOpacity style={styles.floatingButton} onPress={addField}>
+                    <FontAwesomeIcon icon={faPlus} size={24} color="green" />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 16,
-        fontWeight: "600",
+        fontWeight: "300",
         color: '#060606',
     },
     productContainer: {
@@ -305,8 +307,8 @@ const styles = StyleSheet.create({
     },
     floatingButtonContainer: {
         position: "absolute",
-        bottom: 90,
-        right: 30,
+        bottom: 20,
+        right: 20,
         backgroundColor: "#fff",
         borderRadius: 30,
         width: 55,

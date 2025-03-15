@@ -1,11 +1,76 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faBell, faChevronLeft, faChevronRight, faMapMarkerAlt, faPhone } from '@fortawesome/free-solid-svg-icons'
-import { PADDING } from '@/constants/Colors'
+import { CommonStyles, PADDING } from '@/constants/Colors'
 import { router } from 'expo-router'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ApiClient } from '@/components/Src/api/apiBaseUrl'
 
-const AllShop = () => {
+const index = () => {
+    const [shopAllData, setShopAllData] = useState<any[]>([])
+    const [shopId, setShopId] = useState(0)
+    const [loading, setloading] = useState(true)
+
+    useEffect(() => {
+        gatAllShopData();
+    }, [])
+
+    const gatAllShopData = async () => {
+        try {
+            setloading(true);
+            const Userid = 4665;
+
+            const Shopid = await AsyncStorage.getItem("Id");
+            if (Shopid) {
+                setShopId(parseInt(Shopid));
+            }
+
+            const response = await ApiClient.get("/sp_View_GroceryShop?", {
+                params: { UserId: `${Userid}` },
+            });
+
+            if (response.status === 200 && response.data?.data) {
+                setShopAllData(response.data.data);
+                console.log("Shop data fetched successfully", response.data.data);
+            } else {
+                console.error("Unexpected response format", response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching shop data:", error);
+        } finally {
+            setloading(false);
+        }
+    };
+
+    const Item = ({ item }: any) => {
+        return (
+            <View style={[styles.card]}>
+                <TouchableOpacity onPress={() => { router.push('/shopinfo') }}>
+                    <View style={styles.row}>
+                        <View style={styles.profileCircle}>
+                            <Image source={{ uri: `https://cnt.vizhil.com/images/grocery/shop/logo/${item.Logo}` }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                        </View>
+                        <View style={styles.details}>
+                            <Text style={styles.businessName}>{item.ShopName}</Text>
+                            <Text style={styles.address}>{item.Description}</Text>
+                            <View style={styles.row}>
+                                <FontAwesomeIcon icon={faMapMarkerAlt} size={16} color="green" />
+                                <Text style={styles.infoText}> {item.AreaName}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <FontAwesomeIcon icon={faPhone} size={16} color="green" />
+                                <Text style={styles.infoText}> +91 9997634561</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.separator} />
+                    <Text style={styles.email}>Vizhilgrocery@Gmail.Com</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
     return (
         <View>
             <View style={styles.headercontainer}>
@@ -35,36 +100,20 @@ const AllShop = () => {
                 </View>
             </View>
             <View style={{ ...styles.Add }}>
-                <View style={{ ...styles.Addbutton }}>
-                    <Text style={{ color: "#fff" }}>Add</Text>
-                </View>
-                <View style={styles.card}>
-                    <TouchableOpacity onPress={() => {router.push('/shopinfo') }}>
-
-                        <View style={styles.row}>
-                            <View style={styles.profileCircle} />
-                            <View style={styles.details}>
-                                <Text style={styles.businessName}>Vizhil Grocery</Text>
-                                <Text style={styles.address}>1901 Thornridge Cir. Shiloh, Hawaii 81063</Text>
-                                <View style={styles.row}>
-                                    <FontAwesomeIcon icon={faMapMarkerAlt} size={16} color="green" />
-                                    <Text style={styles.infoText}> Hawaii</Text>
-                                </View>
-                                <View style={styles.row}>
-                                    <FontAwesomeIcon icon={faPhone} size={16} color="green" />
-                                    <Text style={styles.infoText}> +91 9997634561</Text>
-                                </View>
-                            </View>
-                        </View>
-
-
-                        <View style={styles.separator} />
-
-
-                        <Text style={styles.email}>Vizhilgrocery@Gmail.Com</Text>
-
+                <View style={{ ...CommonStyles.Addbutton }}>
+                    <TouchableOpacity onPress={() => router.push('/storeinfo')}>
+                        <Text style={{ color: "#fff" }}>Add</Text>
                     </TouchableOpacity>
                 </View>
+                <ScrollView style={{ flex: 1, }}>
+                    <FlatList
+                        scrollEnabled={false}
+                        showsVerticalScrollIndicator={false}
+                        data={shopAllData}
+                        renderItem={({ item }) => <Item item={item} />}
+                        keyExtractor={(item: any) => item.uid}
+                    />
+                </ScrollView>
             </View>
 
         </View>
@@ -74,7 +123,7 @@ const AllShop = () => {
     )
 }
 
-export default AllShop
+export default index
 
 const styles = StyleSheet.create({
     headercontainer: {

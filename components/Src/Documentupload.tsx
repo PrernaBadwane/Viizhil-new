@@ -46,20 +46,9 @@ const Documentupload = () => {
             <Text style={styles.allowedText}>(Allowed png, jpg, jpeg, and pdf only)</Text>
           </View>
 
-          <View style={styles.uploadSection}>
-            <Text style={styles.label}>Upload FSSAI Document :</Text>
-            <TouchableOpacity style={styles.uploadBox}>
-              <Text style={styles.uploadText}>
-              <Text>Drop your file(s) here or <Text style={{color:'#26B24B'}}>browse</Text></Text>
-              </Text>
-              <Text style={styles.fileSizeText}>Max File size: 500KB</Text>
-            </TouchableOpacity>
-            <Text style={styles.allowedText}>(Allowed png, jpg, jpeg, and pdf only)</Text>
-          </View>
-
           {/* Submit Button */}
           <View style={styles.saveButton}>
-            <PrimaryBtn action={handleSubmit} btnTxt="Submit" loading={loading} />
+            <PrimaryBtn action={handleSubmit} btnTxt="Save" loading={loading} />
           </View>
         </ScrollView>
       </View>

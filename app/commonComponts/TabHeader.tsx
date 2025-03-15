@@ -19,9 +19,9 @@ const TabHeader = () => {
 
 
       {/* Right Menu Icon */}
-      <TouchableOpacity style={styles.menuButton}>
+      {/* <TouchableOpacity style={styles.menuButton}>
         <FontAwesomeIcon icon={faEllipsisVertical} color='#000' />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   )
 }

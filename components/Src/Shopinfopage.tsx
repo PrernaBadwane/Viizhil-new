@@ -1,7 +1,7 @@
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import NavigationHeader from '@/app/commonComponts/NavigationHeader'
-import { MARGIN, PADDING } from '@/constants/Colors'
+import { CommonStyles, MARGIN, PADDING } from '@/constants/Colors'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
@@ -15,7 +15,7 @@ const Shopinfopage = () => {
         <ScrollView>
         <View style={{ ...styles.container }}>
           <TouchableOpacity onPress={()=>router.push('/(tabs)/home')}>
-            <View style={{ ...styles.skipbutton }}>
+            <View style={{ ...CommonStyles.Addbutton}}>
               <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: '700' }}>Skip</Text>
             </View>
           </TouchableOpacity>
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: "#222",
   },
   progressText: {
