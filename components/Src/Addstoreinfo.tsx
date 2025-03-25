@@ -33,7 +33,7 @@ const Addstoreinfo = () => {
         contactperson: '',
         brand: '',
         taxId: '',
-        selectedBrand: '',
+        brandID: '',
         selectedCategory: '',
         selectedCategoryType: ''
     });
@@ -111,8 +111,9 @@ const Addstoreinfo = () => {
 
     const AddShopDetails = async () => {
         try {
-            const shopId:any = await AsyncStorage.getItem('AllshoeId');
-            const UserId = "4665"; // Static User ID
+            const shopId:any = await AsyncStorage.getItem('AllshopId');
+            console.log("ShopId:", shopId)
+            const UserId = "4665"; 
     
             let formdata:any = new FormData();
             formdata.append("Id", parseInt(shopId || "0"));
@@ -131,7 +132,7 @@ const Addstoreinfo = () => {
                 });
             }
     
-            console.log("🚀 Sending FormData:", [...formdata.entries()]); // Debugging FormData
+            console.log(" Sending FormData:", [...formdata.entries()]); // Debugging FormData
     
             let response;
             if (shopId && shopId !== "0") {
@@ -141,7 +142,7 @@ const Addstoreinfo = () => {
                 await AsyncStorage.setItem('AllshoeId', JSON.stringify(response?.data?.data?.Id || 0));
             }
     
-            console.log("🔍 API Response:", response); // Debug API response
+            console.log(" API Response:", response); // Debug API response
     
             if (response && response.status === 200) {
                 alert(response.data.message);
@@ -149,7 +150,7 @@ const Addstoreinfo = () => {
                 alert('Something went wrong');
             }
         } catch (error:any) {
-            console.error("❌ Axios Error:", error.response ? error.response.data : error);
+            console.error("Axios Error:", error.response ? error.response.data : error);
         } finally {
             setLoading(false);
         }
@@ -385,7 +386,7 @@ const Addstoreinfo = () => {
                     ) : selected === "Franchise Brand" ? (
                         <View style={styles.picker}>
                             <Text style={styles.label}>Brand Name :</Text>
-                            <View style={{ ...styles.pickerContainer, borderColor: errorMessage.selectedBrand ? '#FF0000' : '#A0A0A0' }}>
+                            <View style={{ ...styles.pickerContainer, borderColor: errorMessage.brand ? '#FF0000' : '#A0A0A0' }}>
                                 <Picker
                                     selectedValue={brandID}
                                     onValueChange={(itemValue: any) => setbrandID(itemValue)}

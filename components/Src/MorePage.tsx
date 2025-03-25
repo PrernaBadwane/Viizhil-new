@@ -46,7 +46,7 @@ const MorePage = () => {
                     </View>
                     <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/pastorder')}>
                     <View style={styles.iconTextContainer}>
                       <Image source={require('../../assets/images/pastorder.png')} />
                         <Text style={styles.menuText}>Past Order</Text>
@@ -74,7 +74,7 @@ const MorePage = () => {
                     </View>
                     <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/help')}>
                     <View style={styles.iconTextContainer}>
                       <Image source={require('../../assets/images/help.png')} />
                         <Text style={styles.menuText}>Help Center</Text>

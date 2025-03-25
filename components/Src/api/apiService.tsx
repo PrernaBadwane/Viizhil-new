@@ -47,4 +47,25 @@ export const UpdateBrand = async (branddata: any) => {
     }
 };
 
+export const BankDetailsVerify = async (shopId: any, ifscCode: any, accountNumber: any, createdBy: any) => {
+    try {
+        const response = await apiService.post('/api/groceryshop/verifybankdetails?shopId=' + shopId + '&ifscCode=' + ifscCode + '&accountNumber=' + accountNumber + '&createdBy=' + createdBy);
+        console.log("Response", response);
+        return response.data;
+    } catch (error: any) {
+        throw error;
+    }
+};
+
+export const VerificedGst = async (shopId: any, gstNumber:any) => {
+    try{
+        const response = await apiService.post('/api/groceryshop/verifygst?shopId=' + shopId + '&gstNumber=' + gstNumber);
+        console.log("Response", response);
+        return response.data;
+    }catch(error: any){
+        throw error;
+    }
+} 
+
+
 

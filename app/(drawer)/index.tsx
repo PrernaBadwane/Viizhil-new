@@ -19,6 +19,7 @@ const index = () => {
     const gatAllShopData = async () => {
         try {
             setloading(true);
+            // const AllShopdata = await AsyncStorage.getItem("AllShopdata");
             const Userid = 4665;
 
             const Shopid = await AsyncStorage.getItem("Id");
