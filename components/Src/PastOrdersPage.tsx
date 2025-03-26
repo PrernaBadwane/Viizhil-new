@@ -1,12 +1,23 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import NavigationHeader from '@/app/commonComponts/NavigationHeader'
 import { PADDING } from '@/constants/Colors'
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const PastOrdersPage = () => {
     const [selected, setSelected] = useState('Today');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedModal, setSelectedModal] = useState("Delivered"); 
+
+    const filters = [
+        "Delivered",
+        "Edited",
+        "Customer Canceled",
+        "Restaurant Cancelled",
+        "Swiggy Cancelled",
+        "Delayed Prep Time"
+    ];
     return (
         <View style={{ flex: 1 }}>
             <NavigationHeader name="Past Order" />
@@ -69,7 +80,9 @@ const PastOrdersPage = () => {
 
                 </View>
                 <View style={{ ...styles.iconContainer }}>
-                    <Image source={require('../../assets/images/filterpast.png')} style={{ width: 25, height: 25 }} />
+                    <TouchableOpacity onPress={() => setModalVisible(true)}>
+                        <Image source={require('../../assets/images/filterpast.png')} style={{ width: 25, height: 25 }} />
+                    </TouchableOpacity>
                 </View>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     {[...Array(10)].map((_, index) => (
@@ -91,6 +104,44 @@ const PastOrdersPage = () => {
                         </View>
                     ))}
                 </ScrollView>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+                            <TouchableOpacity
+                                onPress={() => setModalVisible(false)}
+                                style={styles.closeButton}
+                            >
+                                <Text style={styles.closeText}>
+                                <FontAwesomeIcon icon={faXmark} size={20} color="#333" />
+                                </Text>
+                            </TouchableOpacity>
+
+                            <Text style={styles.modalTitle}>More Filters</Text>
+                            <Text style={styles.modalSubtitle}>Order Status</Text>
+                            <View style={styles.buttoncontainer}>
+                                {filters.map((item, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={[
+                                            styles.modalbutton,
+                                            selectedModal === item && styles.modalselectedButton
+                                        ]}
+                                        onPress={() => setSelectedModal(item)}
+                                    >
+                                        <Text style={[styles.modalbuttonText, selectedModal === item && styles.modalselectedText]}>
+                                            {item}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </View>
     )
@@ -216,5 +267,74 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "flex-end",
+    },
+    modalContent: {
+        backgroundColor: "#fff",
+        padding: PADDING.largePad,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        width: "100%",
+        // alignItems: "center",
+    },
+    closeButton: {
+        position: "absolute",
+        top: -50,
+        right: 20,
+        backgroundColor: "#fff",
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 5,
+    },
+    closeText: {
+        fontSize: 20,
+        color: "#333",
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "600",
+    },
+    modalSubtitle: {
+        fontSize: 16,
+        color: "#4B4B4B",
+        fontWeight: "600",
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    buttoncontainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 10,
+        justifyContent: "flex-start",
+    },
+    modalbutton: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        backgroundColor: "white",
+    },
+    modalselectedButton: {
+        backgroundColor: "#376E46", 
+        borderColor: "#376E46",
+    },
+    modalbuttonText: {
+        fontSize: 14,
+        color: "black",
+    },
+    modalselectedText: {
+        color: "white",
+        fontWeight: "bold",
     }
 })

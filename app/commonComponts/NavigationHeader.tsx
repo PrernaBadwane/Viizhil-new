@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { router } from 'expo-router'
 import { useRoute } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faAngleLeft, faChevronLeft, } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faChevronLeft, faXmark, } from '@fortawesome/free-solid-svg-icons';
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 import Constants from 'expo-constants';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -46,7 +46,9 @@ const NavigationHeader = (props: PropsType) => {
               onPress={() => setModalVisible(false)}
               style={styles.closeButton}
             >
-              <Text style={styles.closeText}>✕</Text>
+              <Text style={styles.closeText}>
+              <FontAwesomeIcon icon={faXmark} size={20} color='#333' />
+              </Text>
             </TouchableOpacity>
 
             {/* Title */}
