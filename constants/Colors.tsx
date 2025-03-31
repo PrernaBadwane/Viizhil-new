@@ -23,6 +23,7 @@ export const COLORS = {
   GroceryPrimaryColor:'#376E46',
   PickerLabelColor:'#BEBEBE',
   PickerTextColor:'#000',
+  fontBaseClr:'#1E1E1E',
 }
 
 export const PADDING = {
@@ -79,7 +80,16 @@ placeholdercolor:{
   fontSize:14,
   fontWeight:'500',
   color:'#2B2827'
-}
+},
+lrgHead:{
+  fontSize: 22,
+  color: COLORS.fontBaseClr,
+  fontWeight:'800'
+},
+mdText:{
+  fontSize: 14,
+  color: COLORS.fontBaseClr,
+},
 })
 
 

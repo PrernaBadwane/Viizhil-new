@@ -57,15 +57,15 @@ export const BankDetailsVerify = async (shopId: any, ifscCode: any, accountNumbe
     }
 };
 
-export const VerificedGst = async (shopId: any, gstNumber:any) => {
-    try{
+export const VerificedGst = async (shopId: any, gstNumber: any) => {
+    try {
         const response = await apiService.post('/api/groceryshop/verifygst?shopId=' + shopId + '&gstNumber=' + gstNumber);
         console.log("Response", response);
         return response.data;
-    }catch(error: any){
+    } catch (error: any) {
         throw error;
     }
-} 
+}
 
 
 

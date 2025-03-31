@@ -46,6 +46,8 @@ export default function RootLayout() {
         <Stack.Screen name="changepassword" options={{ headerShown: false }} />
         <Stack.Screen name="help" options={{ headerShown: false }} />
         <Stack.Screen name="pastorder" options={{ headerShown: false }} />
+        <Stack.Screen name="refer" options={{ headerShown: false }} />
+        <Stack.Screen name="points" options={{ headerShown: false }} />
 
 
         <Stack.Screen name="+not-found" />

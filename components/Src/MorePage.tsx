@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { MARGIN, PADDING } from '@/constants/Colors'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
@@ -13,82 +13,100 @@ const MorePage = () => {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333' }}>More</Text>
                 </View>
             </View>
-            <View style={{ ...styles.container }}>
-                <View style={{ ...styles.circlecontainer }}>
-                    <View style={{ ...styles.circle }}></View>
-                </View>
-                <TouchableOpacity style={styles.menuItem} onPress={()=>router.push('/editprofile')}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/editprofile.png')} />
-                        <Text style={styles.menuText}>Edit Profile</Text>
+            <View style={{flex: 1, backgroundColor: '#F9F9F9',height:"100%"}}>
+                <ScrollView>
+                    <View style={{ ...styles.container }}>
+                        <View style={{ ...styles.circlecontainer }}>
+                            <View style={{ ...styles.circle }}></View>
+                        </View>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/editprofile')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/editprofile.png')} />
+                                <Text style={styles.menuText}>Edit Profile</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/changepassword')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/changepassword.png')} />
+                                <Text style={styles.menuText}>Change Password</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <View style={styles.line} />
+                        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/shop')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/shop.png')} />
+                                <Text style={styles.menuText}>My Shop</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/earning.png')} />
+                                <Text style={styles.menuText}>Earning</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/refer')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/earning.png')} />
+                                <Text style={styles.menuText}>Refer & Earns</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/points')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/earning.png')} />
+                                <Text style={styles.menuText}>Points</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/pastorder')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/pastorder.png')} />
+                                <Text style={styles.menuText}>Past Order</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/learning.png')} />
+                                <Text style={styles.menuText}>Learning Station</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/partner.png')} />
+                                <Text style={styles.menuText}>Partner FAQs</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/compliance.png')} />
+                                <Text style={styles.menuText}>Compliance</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/help')}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/help.png')} />
+                                <Text style={styles.menuText}>Help Center</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
+                        <View style={styles.line} />
+                        <TouchableOpacity style={styles.menuItem}>
+                            <View style={styles.iconTextContainer}>
+                                <Image source={require('../../assets/images/log.png')} />
+                                <Text style={styles.menuText}>Logout</Text>
+                            </View>
+                            <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
+                        </TouchableOpacity>
                     </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem} onPress={()=>router.push('/changepassword')}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/changepassword.png')} />
-                        <Text style={styles.menuText}>Change Password</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <View style={styles.line} />
-                <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/shop')}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/shop.png')} />
-                        <Text style={styles.menuText}>My Shop</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/earning.png')} />
-                        <Text style={styles.menuText}>Earning</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/pastorder')}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/pastorder.png')} />
-                        <Text style={styles.menuText}>Past Order</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/learning.png')} />
-                        <Text style={styles.menuText}>Learning Station</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/partner.png')} />
-                        <Text style={styles.menuText}>Partner FAQs</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/compliance.png')} />
-                        <Text style={styles.menuText}>Compliance</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/help')}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/help.png')} />
-                        <Text style={styles.menuText}>Help Center</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
-                <View style={styles.line} /> 
-                 <TouchableOpacity style={styles.menuItem}>
-                    <View style={styles.iconTextContainer}>
-                      <Image source={require('../../assets/images/log.png')} />
-                        <Text style={styles.menuText}>Logout</Text>
-                    </View>
-                    <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                </TouchableOpacity>
+                </ScrollView>
             </View>
         </View>
     )
@@ -99,7 +117,7 @@ export default MorePage
 const styles = StyleSheet.create({
     headercontainer: {
         backgroundColor: '#fff',
-        height: '50%',
+        height: '100%',
         maxHeight: 90,
         padding: PADDING.largePad,
         paddingTop: 40
@@ -143,5 +161,5 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 10,
         transform: [{ rotate: "1deg" }], // Slight slant effect
-      },
+    },
 })
