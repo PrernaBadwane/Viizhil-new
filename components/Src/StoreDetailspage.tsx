@@ -13,14 +13,14 @@ const StoreDetailspage = () => {
       <View style={{ ...styles.container }}>
         <TouchableOpacity style={styles.card} onPress={()=>router.push('/storeinfo')}>
           <View>
-            <Image source={require('../../assets/images/storepage.png')} style={{ width: 30, height: 30 }} />
+            <Image source={require('../../assets/images/storedetails.png')} style={{ width: 30, height: 30 }} />
           </View>
           <Text style={styles.text}>Store Info</Text>
           <View style={styles.chevronContainer}>
             <FontAwesomeIcon icon={faChevronRight} size={14} color="#000" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={()=>{router.push('/upload')}}>
           <View>
             <Image source={require('../../assets/images/documentupload.png')} style={{ width: 30, height: 30 }} />
           </View>
@@ -29,7 +29,7 @@ const StoreDetailspage = () => {
             <FontAwesomeIcon icon={faChevronRight} size={14} color="#000" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={()=>router.push('/address')}>
           <View>
             <Image source={require('../../assets/images/address.png')} style={{ width: 30, height: 30 }} />
           </View>
@@ -38,7 +38,7 @@ const StoreDetailspage = () => {
             <FontAwesomeIcon icon={faChevronRight} size={14} color="#000" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={()=>router.push('/product')}>
           <View>
             <Image source={require('../../assets/images/productlist.png')} style={{ width: 30, height: 30 }} />
           </View>
@@ -57,7 +57,7 @@ export default StoreDetailspage
 const styles = StyleSheet.create({
   container: {
     height: "90%",
-    // backgroundColor: "red",
+    backgroundColor: '#F9F9F9',
     padding: PADDING.largePad
   },
   card: {

@@ -1,14 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import Referpage from '@/components/Src/Referpage'
 
-const loader = () => {
+const refer = () => {
   return (
-    <View>
-      <Text>loader</Text>
+    <View style={{flex: 1}}>
+     <Referpage />
     </View>
   )
 }
 
-export default loader
+export default refer
 
 const styles = StyleSheet.create({})

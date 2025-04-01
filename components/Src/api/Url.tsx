@@ -1,0 +1,1 @@
+export const GROCERY_BASEURL = "https://3r6ep1pr29.execute-api.ap-southeast-1.amazonaws.com/default" 
