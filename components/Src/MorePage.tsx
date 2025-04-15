@@ -55,13 +55,13 @@ const MorePage = () => {
                             </View>
                             <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/points')}>
+                        {/* <TouchableOpacity style={styles.menuItem} onPress={()=> router.push('/points')}>
                             <View style={styles.iconTextContainer}>
                                 <Image source={require('../../assets/images/earning.png')} />
                                 <Text style={styles.menuText}>Points</Text>
                             </View>
                             <FontAwesomeIcon icon={faChevronRight} size={18} color='#2B2827' />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/pastorder')}>
                             <View style={styles.iconTextContainer}>
                                 <Image source={require('../../assets/images/pastorder.png')} />

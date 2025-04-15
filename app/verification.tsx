@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Verificationpage from '@/components/Src/Verificationpage'
+import Verificationpage from '@/components/Src/VerificationPage/Verificationpage'
 
 const verification = () => {
   return (

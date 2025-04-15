@@ -46,7 +46,7 @@ const Shopinfopage = () => {
             <AnimatedCircularProgress
               size={33}
               width={2}
-              fill={0}
+              fill={70}
               tintColor="#D3D3D3"
               backgroundColor="#F0F0F0"
               rotation={0}
