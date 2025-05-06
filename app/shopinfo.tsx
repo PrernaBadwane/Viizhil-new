@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Shopinfopage from './../components/Src/VerificationPage/ShopInfoPage/ShopInfoPage';
-
+import Shopinfopage from '@/components/Src/ShopInfoPage/ShopInfoPage'
 const shopinfo = () => {
   return (
     <View>

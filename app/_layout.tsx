@@ -48,8 +48,10 @@ export default function RootLayout() {
         <Stack.Screen name="pastorder" options={{ headerShown: false }} />
         <Stack.Screen name="refer" options={{ headerShown: false }} />
         <Stack.Screen name="points" options={{ headerShown: false }} />
-
-
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="signup" options={{ headerShown: false }} />
+        <Stack.Screen name="otpMode" options={{ headerShown: false }} />
+        <Stack.Screen name="allshops" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

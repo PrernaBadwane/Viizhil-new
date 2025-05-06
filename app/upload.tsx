@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Documentupload from '@/components/Src/Documentupload'
+import Documentupload from '@/components/Src/StoreDetails/DocumentUpload/Documentupload'
 
 const upload = () => {
   return (
