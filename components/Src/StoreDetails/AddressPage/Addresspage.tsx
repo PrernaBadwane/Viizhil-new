@@ -4,44 +4,24 @@ import NavigationHeader from "@/app/commonComponts/NavigationHeader";
 import { MARGIN, PADDING } from "@/constants/Colors";
 import AddressForm from "./AddressForm";
 import { ApiClient } from "../../api/apiBaseUrl";
-import { addAddress, updateShopDetails, updateShopDetailsForAddress, updateShopDetailsforAddress } from "../../api/apiService";
+import { addAddress, updateAddress, updateShopDetailsForAddress } from "../../api/apiService";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAddressById } from "../../api/apiClient";
+import { ActivityIndicator } from "react-native-paper";
 
 const AddressPage = () => {
   const [loading, setLoading] = useState(false);
   const { id, mode } = useLocalSearchParams();
   const [expandedForm, setExpandedForm] = useState<string | null>(null);
+  const [initialBillingAddressFetched, setInitialBillingAddressFetched] =
+    useState(false);
+  const [initialPickupAddressFetched, setInitialPickupAddressFetched] =
+    useState(false);
   const [userid, setUserId] = useState<number>(0);
 
-  const getShopDetails = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      const shopId = id;
-      // const shopId =Number(id);
-      // const userId = 4665;
-      setUserId(Number(userId));
-      const response = await ApiClient.get(
-        `/sp_View_GroceryShop?id=${shopId}`,
-        {
-          params: { UserId: `${userId}` },
-        }
-      );
-
-      const data = response?.data?.data;
-      if (Array.isArray(data)) {
-        const shop = data.find((item) => item.Id === shopId);
-        //
-        if (shop) {
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching GST verification status:", error);
-    }
-  };
-
   useEffect(() => {
-    getShopDetails();
+    getShopDetailsAndAddresses();
   }, []);
 
   useEffect(() => {
@@ -62,6 +42,7 @@ const AddressPage = () => {
   }, [userid, id]);
 
   const [billingAddress, setBillingAddress] = useState({
+    id: null,
     contactPerson: "",
     addressName: "",
     doorNo: "",
@@ -82,6 +63,7 @@ const AddressPage = () => {
     contactNo: "",
   });
   const [pickupAddress, setPickupAddress] = useState({
+    id: null,
     contactPerson: "",
     addressName: "",
     doorNo: "",
@@ -101,30 +83,219 @@ const AddressPage = () => {
     subAreaId: 0,
     contactNo: "",
   });
+  const getShopDetailsAndAddresses = async () => {
+    try {
+      const localUserIdStr = await AsyncStorage.getItem("userId");
+      const shopIdStr = id as string; // id from useLocalSearchParams
 
+      if (!localUserIdStr || !shopIdStr) {
+        console.warn("User ID or Shop ID is missing.");
+        return;
+      }
+      const localUserId = Number(localUserIdStr);
+      setUserId(localUserId);
+
+      console.log(
+        `Fetching shop details for ShopID: ${shopIdStr}, UserID: ${localUserId}`
+      );
+      const response = await ApiClient.get(
+        `/sp_View_GroceryShop?Id=${shopIdStr}`,
+        {
+          params: { UserId: `${localUserId}` },
+        }
+      );
+
+      const shopData = response?.data?.data[0];
+
+      if (shopData) {
+        const baseAddressData = {
+          refId: localUserId,
+          modifier: localUserId,
+          restaurantId: shopIdStr,
+        };
+
+        setBillingAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "billing",
+        }));
+        setPickupAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "pickup",
+        }));
+
+        // Now fetch individual addresses if their IDs are present
+        if (shopData.BillingAddressId) {
+          console.log(
+            "Fetching Billing Address for ID:",
+            shopData.BillingAddressId
+          );
+          const billingAddr = await getAddressById(
+            shopData.BillingAddressId.toString()
+          );
+          const billingAddrResponse = billingAddr.data.data[0];
+          console.log(
+            billingAddrResponse.ContactPerson,
+            "billing address response"
+          );
+
+          if (billingAddrResponse) {
+            console.log(
+              "Fetched Billing Address:",
+              billingAddrResponse.data.data[0].AddressName
+            );
+            // Map API response to your billingAddress state structure
+            setBillingAddress({
+              id: billingAddrResponse?.data?.Id || null,
+              contactPerson: billingAddrResponse?.data?.ContactPerson || "",
+              addressName: billingAddrResponse?.data?.AddressName || "",
+              doorNo: billingAddrResponse?.data?.DoorNo || "",
+              pickupAddress: "",
+              countryName: billingAddrResponse?.data?.CountryID?.toString() || "",
+              stateName: billingAddrResponse?.data?.StateID?.toString() || "",
+              cityName: billingAddrResponse?.data?.CityID?.toString() || "",
+              postalcode: billingAddrResponse?.data?.PostalCode?.toString() || "",
+              latitude: billingAddrResponse?.data?.Latitude?.toString() || "",
+              longitude: billingAddrResponse?.data?.Longitude?.toString() || "",
+              refId: localUserId,
+              modifier: localUserId,
+              addrstype: "billing",
+              isDefault: billingAddrResponse?.data?.IsDefault || false,
+              restaurantId: shopIdStr,
+              areaId: billingAddrResponse?.data?.AreaId || 0,
+              subAreaId: billingAddrResponse?.data?.SubAreaId || 0,
+              contactNo: billingAddrResponse?.data?.ContactNo || "",
+            });
+            setInitialBillingAddressFetched(true);
+          }
+        } else {
+          // No BillingAddressId, ensure form is ready for adding
+          setInitialBillingAddressFetched(true); // Mark as "fetched" (meaning we know there isn't one)
+        }
+
+        if (shopData.PickupAddressId) {
+          console.log(
+            "Fetching Pickup Address for ID:",
+            shopData.PickupAddressId
+          );
+          const pickupAddrResponse = await getAddressById(
+            shopData.PickupAddressId
+          );
+          if (pickupAddrResponse && pickupAddrResponse.data.data) {
+            setPickupAddress({
+              id: pickupAddrResponse.data.data[0].Id || null,
+              contactPerson:
+                pickupAddrResponse.data.data[0].ContactPerson || "",
+              addressName: pickupAddrResponse.data.data[0].AddressName || "",
+              doorNo: pickupAddrResponse.data.data[0].DoorNo || "",
+              pickupAddress: pickupAddrResponse.data.data[0].AddressName || "",
+              countryName:
+                pickupAddrResponse.data.data[0].CountryID?.toString() || "",
+              stateName:
+                pickupAddrResponse.data.data[0].StateID?.toString() || "",
+              cityName:
+                pickupAddrResponse.data.data[0].CityID?.toString() || "",
+              postalcode:
+                pickupAddrResponse.data.data[0].PostalCode?.toString() || "",
+              latitude:
+                pickupAddrResponse.data.data[0].Latitude?.toString() || "",
+              longitude:
+                pickupAddrResponse.data.data[0].Longitude?.toString() || "",
+              refId: localUserId,
+              modifier: localUserId,
+              addrstype: "pickup",
+              isDefault: pickupAddrResponse.data.data[0].IsDefault || false,
+              restaurantId: shopIdStr,
+              areaId: pickupAddrResponse.data.data[0].AreaId || 0,
+              subAreaId: pickupAddrResponse.data.data[0].SubAreaId || 0,
+              contactNo: pickupAddrResponse.data.data[0].ContactNo || "",
+            });
+            setInitialPickupAddressFetched(true);
+          }
+        } else {
+          setInitialPickupAddressFetched(true);
+        }
+      } else {
+        console.log("No shop data found for ID:", shopIdStr);
+        // Still set base data for adding new addresses
+        const baseAddressData = {
+          refId: localUserId,
+          modifier: localUserId,
+          restaurantId: shopIdStr,
+        };
+        setBillingAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "billing",
+        }));
+        setPickupAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "pickup",
+        }));
+        setInitialBillingAddressFetched(true); // No existing, ready for add
+        setInitialPickupAddressFetched(true); // No existing, ready for add
+      }
+    } catch (error) {
+      console.error("Error fetching shop details or addresses:", error);
+      // Handle error, maybe set defaults so form can still be used for adding
+      const localUserIdStr = await AsyncStorage.getItem("userId");
+      const shopIdStr = id as string;
+      if (localUserIdStr && shopIdStr) {
+        const localUserId = Number(localUserIdStr);
+        const baseAddressData = {
+          refId: localUserId,
+          modifier: localUserId,
+          restaurantId: shopIdStr,
+        };
+        setBillingAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "billing",
+        }));
+        setPickupAddress((prev) => ({
+          ...prev,
+          ...baseAddressData,
+          addrstype: "pickup",
+        }));
+      }
+      setInitialBillingAddressFetched(true);
+      setInitialPickupAddressFetched(true);
+    }
+  };
   // countryList, stateList, etc. same as before...
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const response = await addAddress(values);
-      const newAddressId = response?.id;
-
-      const shopData = {
-        Id: id,
-        UserId: userid,
-        ModifiedBy: userid,
-        ...(expandedForm === "billing"
-          ? { BillingAddressId: newAddressId }
-          : { PickupAddressId: newAddressId }),
-      };
-
-      const response2 = await updateShopDetailsForAddress(shopData);
-
-      if (response2?.statusCode == 200) {
-        alert("Address added successfully!");
+      if (values.id) {
+        const response = await updateAddress(values);
+        if (response?.statusCode == 200) {
+         alert("Address updated successfully!");
+        } else {
+          alert("Failed to add address.");
+        }
       } else {
-        alert("Failed to add address.");
+        const response = await addAddress(values);
+        const newAddressId = response?.id;
+
+        const shopData = {
+          Id: id,
+          UserId: userid,
+          ModifiedBy: userid,
+          ...(expandedForm === "billing"
+            ? { BillingAddressId: newAddressId }
+            : { PickupAddressId: newAddressId }),
+        };
+       
+        const response2 = await updateShopDetailsForAddress(shopData);
+        console.log(response2, "response from add address");
+        if (response2?.statusCode == 200) {
+          alert("Address added successfully!");
+        } else {
+          alert("Failed to add address.");
+        }
       }
     } catch (error) {
       console.error("Add Address API error:", error);
@@ -139,6 +310,24 @@ const AddressPage = () => {
       setExpandedForm(expandedForm === formName ? null : formName);
     }
   };
+  const initialAddressStateTemplate = {
+    contactPerson: "",
+    addressName: "",
+    doorNo: "",
+    countryName: "",
+    stateName: "",
+    cityName: "",
+    postalcode: "",
+    latitude: "",
+    longitude: "",
+    refId: 0,
+    modifier: 0,
+    isDefault: false,
+    areaId: 0,
+    subAreaId: 0,
+    contactNo: "",
+    pickupAddress: "",
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -150,9 +339,9 @@ const AddressPage = () => {
           title="Grocery Billing Address"
           image={require("../../../../assets/images/billingaddress.png")}
           showLocation={false}
-          values={billingAddress}
-          setValues={setBillingAddress}
-          onSubmit={() => handleSubmit(billingAddress)}
+          values={billingAddress} // Pass the full state object
+          setValues={setBillingAddress} // Pass the setter
+          onSubmit={() => handleSubmit(billingAddress)} // Pass current billingAddress values
         />
 
         <AddressForm

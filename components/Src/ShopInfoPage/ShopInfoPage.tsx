@@ -21,46 +21,59 @@ const Shopinfopage = () => {
   const { id, mode } = useLocalSearchParams();
   const [ValidationProgress, setValidationProgress] = React.useState(0);
   const [BankDetailsProgress, setBankDetailsProgress] = React.useState(0);
+  const [ShopDetailsProgress, setShopDetailsProgress] = React.useState(0);
   const getShopDetails = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
       const shopId = id;
-      // const shopId = 3;
-      // const userId = 4665;
       const response = await ApiClient.get(
         `/sp_View_GroceryShop?UserId=${userId}&Id=${shopId}`,
         {
           params: { UserId: `${userId}` },
         }
       );
-
-      const data = response?.data?.data;
-      if (Array.isArray(data)) {
-        const shop = data.find((item) => item.Id === shopId);
-        //
-        if (shop) {
-          setShopName(shop.ShopName);
-          setLogo(shop.Logo);
-        }
-        // Calculate validation progress based on the shop details
+  
+      const shop = response?.data?.data[0]; // Correctly get the shop object
+      console.log(shop, "shop details data from api");
+  
+      if (shop) {
+        setShopName(shop.ShopName);
+        setLogo(shop.Logo);
+  
+        // Shop completion progress (10 fields)
+        let shopTotal = 0;
+        if (shop.ShopName) shopTotal += 1;
+        if (shop.PickupAddressId) shopTotal += 1;
+        if (shop.BillingAddressId) shopTotal += 1;
+        if (shop.ContactPerson) shopTotal += 1;
+        if (shop.CategoryId) shopTotal += 1;
+        if (shop.OwnBrandName || shop.FranchiseBrandName) shopTotal += 1;
+        if (shop.TaxId) shopTotal += 1;
+        if (shop.MSMEDocument) shopTotal += 1;
+        if (shop.FSSAIDocument) shopTotal += 1;
+        if (shop.GSTDocument) shopTotal += 1;
+        if (shop.Logo) shopTotal += 1;
+        setShopDetailsProgress(Math.round((shopTotal / 11) * 100));
+  
+        // Validation progress
         let total = 0;
-        if (shop?.IsGSTValidate) total += 1;
-        if (shop?.IsEmailValidate) total += 1;
-        if (shop?.IsPhoneValidate) total += 1;
-
+        if (shop.IsGSTValidate) total += 1;
+        if (shop.IsValidEmail) total += 1;
+        if (shop.IsValidPhoneNo) total += 1;
         setValidationProgress(Math.round((total / 3) * 100));
-
-        // calculate the bank Details progress
+  
+        // Bank Details progress
         let bankTotal = 0;
-        if (shop?.AccountNo) bankTotal += 1;
-        if (shop?.AccountHolderName) bankTotal += 1;
-        if (shop?.IFSC) bankTotal += 1;
+        if (shop.AccountNo) bankTotal += 1;
+        if (shop.AccountHolderName) bankTotal += 1;
+        if (shop.IFSC) bankTotal += 1;
         setBankDetailsProgress(Math.round((bankTotal / 3) * 100));
       }
     } catch (error) {
-      console.error("Error fetching GST verification status:", error);
+      console.error("Error fetching shop details:", error);
     }
   };
+  
 
   useEffect(() => {
     getShopDetails();
@@ -131,7 +144,7 @@ const Shopinfopage = () => {
           <OnboardingTile
             icon={require("../../../assets/images/storedetails.png")}
             text="Store Details"
-            progress={0}
+            progress={ShopDetailsProgress}
             onPress={() => {
               router.push({
                 pathname: `/storedetails`,

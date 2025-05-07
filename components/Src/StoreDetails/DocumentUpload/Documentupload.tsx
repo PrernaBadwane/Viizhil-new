@@ -5,7 +5,7 @@ import { MARGIN, PADDING } from '@/constants/Colors';
 import PrimaryBtn from '@/appComponent/button/PrimaryButton';
 import { addShopDocuments, updateShopDocument } from '../../api/apiService';
 import DocumentUploader from './DocumentUploader';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiClient } from '../../api/apiBaseUrl';
 
@@ -30,6 +30,7 @@ const Documentupload = () => {
   const [msmeDoc, setMsmeDoc] = useState(null);
   const [fssaiDoc, setFssaiDoc] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [documentId, setDocumentId] = useState("");
 
   
   // console.log('gst doc',gstDocument);
@@ -43,6 +44,7 @@ const Documentupload = () => {
     }
 
     const formData = new FormData();
+    formData.append('Id', userId!.toString());
     formData.append('ShopId', id.toString());
     formData.append('CreatedBy', userId!.toString());
     formData.append('GSTDocument', {
@@ -65,7 +67,7 @@ const Documentupload = () => {
     try {
       setLoading(true);
       const response = await addShopDocuments(formData);
-      console.log(response);
+      setNavigate(true)
       if (response?.statusCode === 200) {
         Alert.alert(response?.message || 'Success', 'Documents uploaded successfully.');
       } else if (response?.statusCode === 400) {
@@ -84,6 +86,7 @@ const Documentupload = () => {
   const [FSSAIDocument, setFSSAIDocument] = useState(null);
   const [MSMEDocument, setMSMEDocument] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [navigate, setNavigate] = useState(false);
 
   const getShopDetails = async () => {
     try {
@@ -98,6 +101,7 @@ const Documentupload = () => {
 
       const data = response?.data?.data[0];
 
+      if(data?.DocumentId) setDocumentId(data.DocumentId);
       if (data?.GSTDocument) setGstDocument(data.GSTDocument);
       if (data?.FSSAIDocument) setFSSAIDocument(data.FSSAIDocument);
       if (data?.MSMEDocument) setMSMEDocument(data.MSMEDocument);
@@ -121,7 +125,7 @@ const Documentupload = () => {
       const userId = await AsyncStorage.getItem("userId");
       const shopId = id;
       const formData = new FormData();
-      formData.append('Id', userId!.toString());
+      formData.append('Id', documentId!.toString());
       formData.append('ShopId', shopId.toString());
       formData.append('ModifiedBy', userId!.toString());
       formData.append('GSTDocument', {
@@ -139,17 +143,41 @@ const Documentupload = () => {
         name: fssaiDoc.name,
         type: fssaiDoc.mimeType || 'application/pdf',
       } as any);
-      
+      setLoading(true);
       const response = await updateShopDocument(formData);
       console.log(response);
+      if (response?.statusCode === 200) {
+        setNavigate(true);
+        Alert.alert(response?.message || 'Success', 'Documents updated successfully.');
+      } else if (response?.statusCode === 400) {
+        Alert.alert(response?.message || 'Something went wrong');
+        setEditMode(false);
+      }
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || 'An error occurred while uploading documents.';
+      Alert.alert('Upload Failed', errorMessage);
+    } finally {
+      setLoading(false);
 
-      // const response = await 
-    } catch(error){
-      console.log(error);
-    }
+    } 
   }
-  
-  
+   const navigateToShopDetails = async () => {
+      if (navigate) {
+        if ( id) {
+          router.push({
+            pathname: "/shopinfo", 
+            params: { mode: "Mobile Number", id: id.toString() }, 
+          });
+        }  else {
+        console.log("Operation was not successful, navigation skipped.");
+      }
+    }}
+
+    useEffect(() => {
+      if (navigate) {
+        navigateToShopDetails();
+      }
+    },[navigate]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -161,7 +189,7 @@ const Documentupload = () => {
           <DocumentUploader label={`${FSSAIDocument ? 'Uploaded' : 'Upload'} FSSAI Document :`} file={fssaiDoc} setFile={setFssaiDoc} defaultFile={FSSAIDocument} />
 
           {
-            gstDocument && MSMEDocument && FSSAIDocument ?
+            gstDocument && MSMEDocument && FSSAIDocument && !editMode?
             <View style={styles.saveButton}>
             <PrimaryBtn action={() => {setEditMode(true); setGstDocument(null); setFSSAIDocument(null); setMSMEDocument(null);}} btnTxt="Update Details" loading={loading} />
           </View>

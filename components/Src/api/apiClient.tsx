@@ -9,7 +9,7 @@ export const getShop = async (userId:number,shopId:number) => {
       return response;
     } catch (error: any) {
       // Log detailed error info
-      console.error(
+      console.error(      
         "AddShop API Error:",
         error.response?.status, // Log status code
         error.response?.data || error.message // Log server message or general error
@@ -17,3 +17,20 @@ export const getShop = async (userId:number,shopId:number) => {
       throw error;
     }
   };
+
+  export const getAddressById = async (addressId: number) => {
+    try {
+      const response = await ApiClient.get(`list_api_services?table_name=viewaddress&filter_field_1=Id&filter_condition_1=eq&filter_value_1=${ addressId}`);
+   
+      return response;
+    } catch (error) {
+      console.error(`API Error fetching address ${addressId}:`, error);
+      throw error;
+    }
+  };
+
+  export const getProductsInfo=async()=>(
+    ApiClient.get(`sp_View_ShopItem`)
+    
+
+  )

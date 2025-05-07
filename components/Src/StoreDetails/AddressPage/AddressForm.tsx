@@ -238,7 +238,7 @@ const AddressForm = ({
             <Picker
               selectedValue={values.subAreaList}
               onValueChange={(val) => {
-                setValues({ ...values, areaId: 0 });
+                setValues({ ...values, subAreaId: 0 });
                 setAreaId(val);
               }}
               style={styles.pickerStyle}

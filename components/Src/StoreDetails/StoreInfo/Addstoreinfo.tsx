@@ -98,16 +98,16 @@ const Addstoreinfo = () => {
 
   const navigateToShopDetails = async () => {
     if (navigate) {
-      if (editdata && id) {
+      if ( id) {
         console.log("Navigating (Edit): editdata=", editdata, "id=", id);
         router.push({
-          pathname: "/storeinfo", // Ensure this path is correctly defined in your routing setup
-          params: { mode: "Mobile Number", id: id.toString() }, // Ensure id is a string if the page expects it
+          pathname: "/shopinfo", 
+          params: { mode: "Mobile Number", id: id.toString() }, 
         });
-      } else if (!editdata && newId) {
+      } else if (newId) {
         console.log("Navigating (Add): editdata=", editdata, "newId=", newId);
         router.push({
-          pathname: "/storeinfo", // Ensure this path is correctly defined
+          pathname: "/shopinfo", // Ensure this path is correctly defined
           params: { mode: "Mobile Number", id: newId.toString() }, // Ensure newId is a string
         });
       } else if (!editdata && !newId) {
@@ -190,6 +190,12 @@ const Addstoreinfo = () => {
   useEffect(() => {
     getShopDetails();
   }, []);
+
+  useEffect(() => {
+    if (navigate) {
+      navigateToShopDetails();
+    }
+  }, [navigate]);
 
   const validateForm = () => {
     let errors: any = {};
@@ -341,12 +347,10 @@ const Addstoreinfo = () => {
       setLoading(true);
       // Call AddShopDetails function
       let operationSuccessful = false;
-      operationSuccessful = await submitShopData(); 
-      setNavigate(true)
-      // Call getShopData function
-      // getShopData();
-      // ShopBrand();
-     
+      operationSuccessful = await submitShopData();
+      if(operationSuccessful){
+        setNavigate(true)
+      }
       setLoading(false);
 
     }

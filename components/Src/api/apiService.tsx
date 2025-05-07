@@ -178,6 +178,21 @@ export const addAddress = async (addressData: any) => {
     throw error;
   }
 };
+export const updateAddress = async (addressData: any) => {
+  try {
+    const token = await getAuthToken();
+    const response = await apiService.put("/api/address/update", addressData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
 
 // Working fine
 export const updateShopDetails = async (formData: FormData) => {
