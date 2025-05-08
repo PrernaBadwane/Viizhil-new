@@ -99,9 +99,9 @@ const AddressForm = ({
           <TextInput
             style={styles.input}
             placeholder="Enter Your Restaurant Name"
-            value={values.shopName}
+            value={values.addressName}
             onChangeText={(text) =>
-              setValues({ ...values, contactPerson: text })
+              setValues({ ...values, addressName: text })
             }
           />
 
@@ -118,14 +118,14 @@ const AddressForm = ({
           <TextInput
             style={styles.input}
             placeholder="Street Name / Landmark"
-            value={values.street}
-            onChangeText={(text) => setValues({ ...values, addressName: text })}
+            value={values.pickupAddress}
+            onChangeText={(text) => setValues({ ...values, pickupAddress: text })}
           />
 
           <Text style={styles.label}>Country:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={values.country}
+              selectedValue={values.countryName}
               onValueChange={(val) => {
                 setValues({ ...values, countryName: String(val) });
                 setCountryId(val);
@@ -143,7 +143,7 @@ const AddressForm = ({
                 <Picker.Item
                   key={index}
                   label={item.Country}
-                  value={item.UID}
+                  value={String(item.UID)}
                   color="#000"
                 />
               ))}
@@ -153,7 +153,7 @@ const AddressForm = ({
           <Text style={styles.label}>State:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={values.state}
+              selectedValue={values.stateName}
               onValueChange={(val) => {
                 setValues({ ...values, stateName: String(val) });
                 setStateId(val);
@@ -171,7 +171,7 @@ const AddressForm = ({
                 <Picker.Item
                   key={index}
                   label={item.StateName}
-                  value={item.StateID}
+                  value={String(item.StateID)}
                   color="#000"
                 />
               ))}
@@ -181,7 +181,7 @@ const AddressForm = ({
           <Text style={styles.label}>City:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={values.city}
+              selectedValue={values.cityName}
               onValueChange={(val) => {
                 setValues({ ...values, cityName: String(val) });
                 setCityId(val);
@@ -199,7 +199,7 @@ const AddressForm = ({
                 <Picker.Item
                   key={index}
                   label={item.City}
-                  value={item.CityID}
+                  value={String(item.CityID)}
                   color="#000"
                 />
               ))}
@@ -209,9 +209,9 @@ const AddressForm = ({
           <Text style={styles.label}>Area:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={values.area}
+              selectedValue={values.areaId}
               onValueChange={(val) => {
-                setValues({ ...values, subAreaId: 0 });
+                setValues({ ...values, areaId: String(val) });
                 setSubAreaId(val);
               }}
               style={styles.pickerStyle}
@@ -236,9 +236,9 @@ const AddressForm = ({
           <Text style={styles.label}>Sub Area:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={values.subAreaList}
+              selectedValue={values.subAreaId}
               onValueChange={(val) => {
-                setValues({ ...values, subAreaId: 0 });
+                setValues({ ...values, subAreaId: String(val) });
                 setAreaId(val);
               }}
               style={styles.pickerStyle}
@@ -265,7 +265,7 @@ const AddressForm = ({
             style={styles.input}
             placeholder="Postal Code"
             keyboardType="numeric"
-            value={values.postal}
+            value={values.postalcode}
             onChangeText={(text) =>
               setValues({ ...values, postalcode: Number(text) })
             }

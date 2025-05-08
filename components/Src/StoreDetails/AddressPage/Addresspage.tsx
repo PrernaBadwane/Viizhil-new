@@ -5,13 +5,14 @@ import { MARGIN, PADDING } from "@/constants/Colors";
 import AddressForm from "./AddressForm";
 import { ApiClient } from "../../api/apiBaseUrl";
 import { addAddress, updateAddress, updateShopDetailsForAddress } from "../../api/apiService";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAddressById } from "../../api/apiClient";
 import { ActivityIndicator } from "react-native-paper";
 
 const AddressPage = () => {
   const [loading, setLoading] = useState(false);
+  const [navigate, setNavigate] = useState(false);
   const { id, mode } = useLocalSearchParams();
   const [expandedForm, setExpandedForm] = useState<string | null>(null);
   const [initialBillingAddressFetched, setInitialBillingAddressFetched] =
@@ -94,10 +95,6 @@ const AddressPage = () => {
       }
       const localUserId = Number(localUserIdStr);
       setUserId(localUserId);
-
-      console.log(
-        `Fetching shop details for ShopID: ${shopIdStr}, UserID: ${localUserId}`
-      );
       const response = await ApiClient.get(
         `/sp_View_GroceryShop?Id=${shopIdStr}`,
         {
@@ -105,8 +102,7 @@ const AddressPage = () => {
         }
       );
 
-      const shopData = response?.data?.data[0];
-
+      const shopData = response.data.data[0];
       if (shopData) {
         const baseAddressData = {
           refId: localUserId,
@@ -127,89 +123,74 @@ const AddressPage = () => {
 
         // Now fetch individual addresses if their IDs are present
         if (shopData.BillingAddressId) {
-          console.log(
-            "Fetching Billing Address for ID:",
+         
+          const billingAddr = await getAddressById(
             shopData.BillingAddressId
           );
-          const billingAddr = await getAddressById(
-            shopData.BillingAddressId.toString()
-          );
-          const billingAddrResponse = billingAddr.data.data[0];
-          console.log(
-            billingAddrResponse.ContactPerson,
-            "billing address response"
-          );
+          const billingAddrResponse = billingAddr;
+          
 
           if (billingAddrResponse) {
-            console.log(
-              "Fetched Billing Address:",
-              billingAddrResponse.data.data[0].AddressName
-            );
-            // Map API response to your billingAddress state structure
+            
             setBillingAddress({
-              id: billingAddrResponse?.data?.Id || null,
-              contactPerson: billingAddrResponse?.data?.ContactPerson || "",
-              addressName: billingAddrResponse?.data?.AddressName || "",
-              doorNo: billingAddrResponse?.data?.DoorNo || "",
-              pickupAddress: "",
-              countryName: billingAddrResponse?.data?.CountryID?.toString() || "",
-              stateName: billingAddrResponse?.data?.StateID?.toString() || "",
-              cityName: billingAddrResponse?.data?.CityID?.toString() || "",
-              postalcode: billingAddrResponse?.data?.PostalCode?.toString() || "",
-              latitude: billingAddrResponse?.data?.Latitude?.toString() || "",
-              longitude: billingAddrResponse?.data?.Longitude?.toString() || "",
+              id: billingAddrResponse?.Id || null,
+              contactPerson: billingAddrResponse?.ContactPerson || "",
+              addressName: billingAddrResponse?.AddressName || "",
+              doorNo: billingAddrResponse?.DoorNo || "",
+              pickupAddress: billingAddrResponse?.PickupAddress || "",
+              countryName: billingAddrResponse?.CountryId?.toString() || "",
+              stateName: billingAddrResponse?.StateId?.toString() || "",
+              cityName: billingAddrResponse?.CityId?.toString() || "",
+              postalcode: billingAddrResponse?.PostalCode?.toString() || "",
+              latitude: billingAddrResponse?.Latitude?.toString() || "",
+              longitude: billingAddrResponse?.Longitude?.toString() || "",
               refId: localUserId,
               modifier: localUserId,
               addrstype: "billing",
-              isDefault: billingAddrResponse?.data?.IsDefault || false,
+              isDefault: billingAddrResponse?.IsDefault || false,
               restaurantId: shopIdStr,
-              areaId: billingAddrResponse?.data?.AreaId || 0,
-              subAreaId: billingAddrResponse?.data?.SubAreaId || 0,
-              contactNo: billingAddrResponse?.data?.ContactNo || "",
+              areaId: billingAddrResponse?.AreaId || 0,
+              subAreaId: billingAddrResponse?.SubAreaId || 0,
+              contactNo: billingAddrResponse?.ContactNo || "",
             });
             setInitialBillingAddressFetched(true);
           }
         } else {
-          // No BillingAddressId, ensure form is ready for adding
           setInitialBillingAddressFetched(true); // Mark as "fetched" (meaning we know there isn't one)
         }
 
         if (shopData.PickupAddressId) {
-          console.log(
-            "Fetching Pickup Address for ID:",
-            shopData.PickupAddressId
-          );
           const pickupAddrResponse = await getAddressById(
             shopData.PickupAddressId
           );
-          if (pickupAddrResponse && pickupAddrResponse.data.data) {
+          if (pickupAddrResponse) {
             setPickupAddress({
-              id: pickupAddrResponse.data.data[0].Id || null,
+              id: pickupAddrResponse?.Id || null,
               contactPerson:
-                pickupAddrResponse.data.data[0].ContactPerson || "",
-              addressName: pickupAddrResponse.data.data[0].AddressName || "",
-              doorNo: pickupAddrResponse.data.data[0].DoorNo || "",
-              pickupAddress: pickupAddrResponse.data.data[0].AddressName || "",
+                pickupAddrResponse?.ContactPerson || "",
+              addressName: pickupAddrResponse?.AddressName || "",
+              doorNo: pickupAddrResponse?.DoorNo || "",
+              pickupAddress: pickupAddrResponse?.PickupAddress || "",
               countryName:
-                pickupAddrResponse.data.data[0].CountryID?.toString() || "",
+                pickupAddrResponse?.CountryId?.toString() || "",
               stateName:
-                pickupAddrResponse.data.data[0].StateID?.toString() || "",
+                pickupAddrResponse?.StateId?.toString() || "",
               cityName:
-                pickupAddrResponse.data.data[0].CityID?.toString() || "",
+                pickupAddrResponse?.CityId?.toString() || "",
               postalcode:
-                pickupAddrResponse.data.data[0].PostalCode?.toString() || "",
+                pickupAddrResponse?.PostalCode?.toString() || "",
               latitude:
-                pickupAddrResponse.data.data[0].Latitude?.toString() || "",
+                pickupAddrResponse?.Latitude?.toString() || "",
               longitude:
-                pickupAddrResponse.data.data[0].Longitude?.toString() || "",
+                pickupAddrResponse?.Longitude?.toString() || "",
               refId: localUserId,
               modifier: localUserId,
               addrstype: "pickup",
-              isDefault: pickupAddrResponse.data.data[0].IsDefault || false,
+              isDefault: pickupAddrResponse?.IsDefault || false,
               restaurantId: shopIdStr,
-              areaId: pickupAddrResponse.data.data[0].AreaId || 0,
-              subAreaId: pickupAddrResponse.data.data[0].SubAreaId || 0,
-              contactNo: pickupAddrResponse.data.data[0].ContactNo || "",
+              areaId: pickupAddrResponse?.AreaId || 0,
+              subAreaId: pickupAddrResponse?.SubAreaId || 0,
+              contactNo: pickupAddrResponse?.ContactNo || "",
             });
             setInitialPickupAddressFetched(true);
           }
@@ -302,6 +283,7 @@ const AddressPage = () => {
       alert("Something went wrong while adding the address.");
     } finally {
       setLoading(false);
+      setNavigate(true); // Set navigate to true to trigger navigation
     }
   };
 
@@ -328,6 +310,24 @@ const AddressPage = () => {
     contactNo: "",
     pickupAddress: "",
   };
+   const navigateToShopDetails = async () => {
+        if (navigate) {
+          if ( id) {
+            router.push({
+              pathname: "/shopinfo", 
+              params: { mode: "Mobile Number", id: id.toString() }, 
+            });
+          }  else {
+          console.log("Operation was not successful, navigation skipped.");
+        }
+      }}
+  
+      useEffect(() => {
+        if (navigate) {
+          navigateToShopDetails();
+        }
+      },[navigate]);
+  
 
   return (
     <View style={{ flex: 1 }}>

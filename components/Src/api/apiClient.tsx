@@ -21,8 +21,7 @@ export const getShop = async (userId:number,shopId:number) => {
   export const getAddressById = async (addressId: number) => {
     try {
       const response = await ApiClient.get(`list_api_services?table_name=viewaddress&filter_field_1=Id&filter_condition_1=eq&filter_value_1=${ addressId}`);
-   
-      return response;
+      return response.data.data[0];
     } catch (error) {
       console.error(`API Error fetching address ${addressId}:`, error);
       throw error;

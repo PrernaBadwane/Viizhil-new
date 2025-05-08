@@ -6,6 +6,8 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import NavigationHeader from "@/app/commonComponts/NavigationHeader";
@@ -15,7 +17,7 @@ import { BankDetailsVerify } from "./api/apiService";
 import { ApiClient, apiService } from "./api/apiBaseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-import { useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 const BankDetailspage = () => {
   const { id, mode } = useLocalSearchParams();
@@ -26,7 +28,7 @@ const BankDetailspage = () => {
   const [userId, setUserId] = useState(0);
   const [loading, setLoading] = useState(false);
   const [confirmAccountNumber, setConfirmAccountNumber] = useState("");
-
+  const [navigate, setNavigate] = useState(false);
   const [accountHolderName, setAccountHolderName] = useState("");
   const [accountNumberError, setAccountNumberError] = useState("");
   const [confirmAccountError, setConfirmAccountError] = useState("");
@@ -40,7 +42,7 @@ const BankDetailspage = () => {
 
         const shopId: any = Number(id);
         const response = await ApiClient.get(
-          `/sp_View_GroceryShop?id=${shopId}`,
+          `/sp_View_GroceryShop?Id=${shopId}`,
           {
             params: { UserId: `${UserId}` },
           }
@@ -117,21 +119,64 @@ const BankDetailspage = () => {
     }
 
     try {
-      const data = await BankDetailsVerify(
+      const response = await BankDetailsVerify(
         shopId,
         ifscCode,
         accountNumber,
         userId
       );
-
-      console.log("API Call Success:", data);
-      setAccountHolderName(data.accountHolderName);
-    } catch (error) {
-      console.error("API Call Failed:", error);
+console.log(response);
+      if (response?.statusCode === 200) {
+        setNavigate(true);
+        Alert.alert(response?.message );
+      } else if (response?.statusCode === 400) {
+        Alert.alert(response?.message || 'Something went wrong');
+      }
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || 'An error occurred while uploading documents.';
+      Alert.alert('Upload Failed', errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
+
+    } 
+  }
+   const navigateToShopDetails = async () => {
+      if (navigate) {
+        if ( id) {
+          router.push({
+            pathname: "/shopinfo", 
+            params: { mode: "Mobile Number", id: id.toString() }, 
+          });
+        }  else {
+        console.log("Operation was not successful, navigation skipped.");
+      }
+    }}
+
+    // useFocusEffect(
+    //   React.useCallback(() => {
+    //     const onBackPress = () => {
+    //       router.replace({
+    //         pathname: '/shopinfo',
+    //         params: {
+    //           mode: 'Mobile Number',
+    //           id: `${id}`,
+    //         },
+    //       });
+    //       return true; // Prevent default back action
+    //     };
+  
+    //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+    //     return () =>
+    //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    //   }, [id]) // Dependency on 'id'
+    // );
+
+    useEffect(() => {
+      if (navigate) {
+        navigateToShopDetails();
+      }
+    },[navigate]);
 
   return (
     <View style={styles.safeContainer}>

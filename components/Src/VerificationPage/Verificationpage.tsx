@@ -1,4 +1,4 @@
-import { Alert, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Alert, BackHandler, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import NavigationHeader from "@/app/commonComponts/NavigationHeader";
 import { MARGIN, PADDING } from "@/constants/Colors";
@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiClient } from "@/components/Src/api/apiBaseUrl";
 import VerificationInput from "./VerificationInputFields";
 import { sendOtpOnEmail, verifyGst } from "../api/apiService";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 const VerificationPage = () => {
   const { id, mode } = useLocalSearchParams();
@@ -17,6 +17,7 @@ const VerificationPage = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [isGstVerified, setIsGstVerified] = useState(false);
+  const [navigate, setNavigate] = useState(false);
   const [gstError, setGstError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ const VerificationPage = () => {
       Alert.alert("GST Verification failed", message);
     } finally {
       setLoading(false);
+      setNavigate(true);
     }
   };
 
@@ -91,6 +93,26 @@ const VerificationPage = () => {
     }
   };
 
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       router.replace({
+  //         pathname: '/shopinfo',
+  //         params: {
+  //           mode: 'Mobile Number',
+  //           id: `${id}`,
+  //         },
+  //       });
+  //       return true; // Prevent default back action
+  //     };
+
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  //     return () =>
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, [id]) // Dependency on 'id'
+  // );
+
   const checkVerified = async () => {
     setLoading(true);
     try {
@@ -127,9 +149,27 @@ const VerificationPage = () => {
     }
   };
 
+  const navigateToShopDetails = async () => {
+    if (navigate) {
+    
+        router.push({
+          pathname: `/verification`,
+          params: {
+            mode: "Mobile Number",
+            id: `${id}`,
+          },
+        });
+      
+    } 
+  }
+
   useEffect(() => {
     checkVerified();
   }, []);
+  useEffect(() => {
+      navigateToShopDetails();
+    
+  }, [isGstVerified, isEmailVerified, isPhoneVerified, navigate]);
 
   return (
     <SafeAreaView>

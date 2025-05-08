@@ -236,7 +236,11 @@ const OtpScreen = (props: OtpProps) => {
             console.error(err);
             setTimeout(() => {
               router.push({
-                pathname: '/verification',
+                pathname: `/verification`,
+                params: {
+                  mode: "Mobile Number",
+                  id: `${id}`,
+                },
               });
             }, 2000);
           }

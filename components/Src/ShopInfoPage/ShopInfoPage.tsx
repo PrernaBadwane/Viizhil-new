@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   SafeAreaView,
   ScrollView,
@@ -10,7 +11,7 @@ import {
 import React, { useEffect } from "react";
 import NavigationHeader from "@/app/commonComponts/NavigationHeader";
 import { CommonStyles, MARGIN, PADDING } from "@/constants/Colors";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { ApiClient } from "../api/apiBaseUrl";
 import OnboardingTile from "./OnboardingTitle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -74,7 +75,22 @@ const Shopinfopage = () => {
     }
   };
   
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        router.replace({
+          pathname: '/shop',
+          
+        });
+        return true; // Prevent default back action
+      };
 
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [id]) // Dependency on 'id'
+  );
   useEffect(() => {
     getShopDetails();
   }, []);
@@ -110,7 +126,7 @@ const Shopinfopage = () => {
               </Text>
             </View>
 
-            <TouchableOpacity onPress={() => router.push("/(tabs)/home")}>
+            <TouchableOpacity onPress={() => router.push("/shop")}>
               <View style={CommonStyles.Addbutton}>
                 <Text
                   style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "700" }}

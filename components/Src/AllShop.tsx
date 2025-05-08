@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faBell,
@@ -17,7 +17,7 @@ import {
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 import { CommonStyles, PADDING } from "@/constants/Colors";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiClient } from "@/components/Src/api/apiBaseUrl";
 
@@ -54,9 +54,11 @@ const AllShop = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAllShopData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllShopData();
+    }, [])
+  );
 
   const Item = ({ item }: any) => {
     return (

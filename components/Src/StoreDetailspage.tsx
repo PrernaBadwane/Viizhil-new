@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -11,7 +12,7 @@ import NavigationHeader from "@/app/commonComponts/NavigationHeader";
 import { PADDING } from "@/constants/Colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faChevronRight, faStore } from "@fortawesome/free-solid-svg-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { ApiClient } from "./api/apiBaseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -45,6 +46,25 @@ const StoreDetailspage = () => {
       console.error("Error fetching GST verification status:", error);
     }
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        router.replace({
+          pathname: '/shopinfo',
+          params: {
+            mode: 'Mobile Number',
+            id: `${id}`,
+          },
+        });
+        return true; // Prevent default back action
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [id]) // Dependency on 'id'
+  );
 
   useEffect(() => {
     getShopDetails();

@@ -16,7 +16,7 @@ const LoginScreen = () => {
     setLoading(true);
     console.log("Phone Number:", `${countryCode} ${phoneNumber}`);
     const response: any = await login(`${countryCode}${phoneNumber}`.trim());
-    router.replace('/home');
+    router.replace('/shop');
     if (response.statusCode == 200) {
       console.log(`${countryCode}${phoneNumber}`)
       router.push({
