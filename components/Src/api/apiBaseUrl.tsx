@@ -38,8 +38,8 @@ const refreshToken = async () => {
 
     if (!data?.message) throw new Error("No new access token returned");
 
-    await AsyncStorage.setItem("accessToken", data.message);
-    await AsyncStorage.setItem("tokenExpiryDateTime", data.expiryDateTime);
+    // await AsyncStorage.setItem("accessToken", data.message);
+    // await AsyncStorage.setItem("tokenExpiryDateTime", data.expiryDateTime);
 
     return data.message;
   } catch (err) {

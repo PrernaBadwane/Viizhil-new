@@ -143,6 +143,7 @@ const OtpScreen = (props: OtpProps) => {
         await AsyncStorage.setItem('userToken', JSON.stringify(userData.token));
         await AsyncStorage.setItem('phoneNo', JSON.stringify(userData.phoneNumber));
         await AsyncStorage.setItem('refreshToken', JSON.stringify(userData.refreshToken));
+        await AsyncStorage.setItem('accessToken', JSON.stringify(userData.accessToken));
         console.log(userData.token)
       } else {
         await AsyncStorage.removeItem('user');

@@ -1,7 +1,14 @@
 import { apiService } from "./apiBaseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import shopinfo from './../../../grocery/app/shopinfo';
+
+interface ProductDataFromComponent {
+  id: string; // Product's own ID (will be productId)
+  quantity: string;
+  shopId: string; // The ID of the shop
+  price: string;
+  discount: string; // for offerPercentage
+}
 
 interface ProfileFormData {
   firstname: string;
@@ -132,8 +139,6 @@ export const AddShop = async (formData: FormData) => {
       accept: "application/json",
     };
 
-    console.log(headers);
-
     if (!token) {
       console.error("AddShop Error: Access token not found");
       throw new Error("Access token not found. Please log in again.");
@@ -160,7 +165,6 @@ export const AddShop = async (formData: FormData) => {
     throw new Error(message);
   }
 };
-
 
 // Working fine
 export const addAddress = async (addressData: any) => {
@@ -393,7 +397,6 @@ export const phoneVerify = async (shopId: string, otpNo: string) => {
   }
 };
 
-
 // Verify email
 // Working fine
 export const sendOtpOnEmail = async (id: number, emailId: string) => {
@@ -402,7 +405,7 @@ export const sendOtpOnEmail = async (id: number, emailId: string) => {
     const response = await apiService.post(
       "/api/groceryshop/sendemailotp",
       {
-        shopId : id,
+        shopId: id,
         emailId,
       },
       {
@@ -464,5 +467,24 @@ export const updateShopDetailsForAddress = async (shopdata: any) => {
     return Response.data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const addProduct = async (productData: any): Promise<any> => {
+  try {
+    const accessToken = await getAuthToken();
+
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    const response = await apiService.post("/api/shopitem/add", productData, {
+      headers,
+    });
+
+    console.log("API response for adding product:", response);
+    return response;
+  } catch (error) {
+    console.log(error);
   }
 };

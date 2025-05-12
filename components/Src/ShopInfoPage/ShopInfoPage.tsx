@@ -17,7 +17,7 @@ import OnboardingTile from "./OnboardingTitle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Shopinfopage = () => {
-  const [ShopName, setShopName] = React.useState("Vizhil Grocery Store");
+  const [ShopName, setShopName] = React.useState("");
   const [Logo, setLogo] = React.useState("logo.png");
   const { id, mode } = useLocalSearchParams();
   const [ValidationProgress, setValidationProgress] = React.useState(0);
@@ -126,7 +126,7 @@ const Shopinfopage = () => {
               </Text>
             </View>
 
-            <TouchableOpacity onPress={() => router.push("/shop")}>
+            <TouchableOpacity onPress={() => router.push("/home")}>
               <View style={CommonStyles.Addbutton}>
                 <Text
                   style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "700" }}

@@ -58,21 +58,23 @@ const AllShop = () => {
     useCallback(() => {
       fetchAllShopData();
     }, [])
+    
   );
 
   const Item = ({ item }: any) => {
     return (
       <View style={[styles.card]}>
         <TouchableOpacity
-          onPress={() => {
-            router.push({
-              pathname: `/shopinfo`,
-              params: {
-                mode: "Mobile Number",
-                id: `${item.Id}`,
-              },
-            });
-          }}
+          onPress={async () => {
+    router.push({
+      pathname: `/shopinfo`,
+      params: {
+        mode: "Mobile Number",
+        id: `${item.Id}`,
+      },
+    });
+    await AsyncStorage.setItem('ShopId', `${item.Id}`);
+  }}
         >
           <View style={styles.row}>
             <View style={styles.profileCircle}>

@@ -162,7 +162,15 @@ const StoreDetailspage = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => router.push("/product")}
+          onPress={() => {
+            router.push({
+              pathname: `/product`,
+              params: {
+                mode: "Mobile Number",
+                id: `${id}`,
+              },
+            });
+          }}
         >
           <View>
             <Image

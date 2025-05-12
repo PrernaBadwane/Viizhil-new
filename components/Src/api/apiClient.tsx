@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiClient } from "./apiBaseUrl";
 
 export const getShop = async (userId:number,shopId:number) => {
@@ -28,8 +29,22 @@ export const getShop = async (userId:number,shopId:number) => {
     }
   };
 
-  export const getProductsInfo=async()=>(
-    ApiClient.get(`sp_View_ShopItem`)
-    
-
-  )
+  export const getProductsInfo = async (selectedCategoryType:number,selectedCategory:number,selectedSubCategory:number) => {
+    try {
+      const tokenWithString = await AsyncStorage.getItem("accessToken");
+    const token = tokenWithString!.replace(/^"|"$/g, "");
+      const response = await ApiClient.get(
+        `/sp_View_ShopItem?Limit=10&Offset=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      return response;
+    } catch (error) {
+      console.error(`API Error fetching :`, error);
+      throw error;
+    }
+  };
+  
